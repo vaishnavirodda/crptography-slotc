@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+#define BLOCK_SIZE 8
+
+void encrypt_ECB(const unsigned char *plaintext, int plaintext_len, const unsigned char *key, unsigned char *ciphertext) {
+
+    int numBlocks = plaintext_len / BLOCK_SIZE;
+
+    for (int i = 0; i < numBlocks; i++) {
+    }
+}
+
+void decrypt_ECB(const unsigned char *ciphertext, int ciphertext_len, const unsigned char *key, unsigned char *plaintext) {
+
+    int numBlocks = ciphertext_len / BLOCK_SIZE;
+
+    for (int i = 0; i < numBlocks; i++) {
+    }
+}
+
+int main() {
+    const unsigned char *plaintext = (unsigned char *)"Hello, world! This is a test message.";
+    const unsigned char *key = (unsigned char *)"0123456789ABCDEF";
+    unsigned char ciphertext[BLOCK_SIZE * 4];
+    unsigned char decrypted_plaintext[BLOCK_SIZE * 4];
+
+    encrypt_ECB(plaintext, strlen((char *)plaintext), key, ciphertext);
+
+    printf("Ciphertext: ");
+    for (int i = 0; i < BLOCK_SIZE * 4; i++) {
+        printf("%02X ", ciphertext[i]);
+    }
+    printf("\n");
+
+    decrypt_ECB(ciphertext, BLOCK_SIZE * 4, key, decrypted_plaintext);
+
+    printf("Decrypted Plaintext: %s\n", decrypted_plaintext);
+
+    return 0;
+}
