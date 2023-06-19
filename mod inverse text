@@ -1,0 +1,93 @@
+#include <stdio.h>
+
+#define N 2 
+int modInverse(int a, int m) {
+    a = a % m;
+    for (int x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            return x;
+        }
+    }
+    return -1;
+}
+int determinant(int matrix[N][N]) {
+    return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+}
+int modDeterminant(int matrix[N][N], int mod) {
+    int det = determinant(matrix);
+    return (det % mod + mod) % mod;
+}
+void inverseMatrix(int matrix[N][N], int mod) {
+    int det = modDeterminant(matrix, mod);
+    int inverseDet = modInverse(det, mod);
+    int temp = matrix[0][0];
+    matrix[0][0] = matrix[1][1];
+    matrix[1][1] = temp;
+    matrix[0][1] = -matrix[0][1];
+    matrix[1][0] = -matrix[1][0];
+    matrix[0][1] = (matrix[0][1] % mod + mod) % mod;
+    matrix[1][0] = (matrix[1][0] % mod + mod) % mod;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            matrix[i][j] = (matrix[i][j] * inverseDet) % mod;
+        }
+    }
+}
+void encrypt(int plaintext[N], int key[N][N], int mod, int ciphertext[N]) {
+    for (int i = 0; i < N; i++) {
+        ciphertext[i] = 0;
+        for (int j = 0; j < N; j++) {
+            ciphertext[i] += key[i][j] * plaintext[j];
+        }
+        ciphertext[i] %= mod;
+    }
+}
+void decrypt(int ciphertext[N], int key[N][N], int mod, int plaintext[N]) {
+    inverseMatrix(key, mod);
+    for (int i = 0; i < N; i++) {
+        plaintext[i] = 0;
+        for (int j = 0; j < N; j++) {
+            plaintext[i] += key[i][j] * ciphertext[j];
+        }
+        plaintext[i] %= mod;
+    }
+}
+void printMatrix(int matrix[N][N]) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int plaintext[N] = {2, 3}; 
+    int key[N][N] = {
+        {1, 2},
+        {3, 4}
+    }; 
+    int mod = 26; 
+
+    int ciphertext[N]; 
+    int decryptedText[N]; 
+    printf("Plaintext: ");
+    for (int i = 0; i < N; i++) {
+        printf("%c ", plaintext[i] + 'A');
+    }
+
+    printf("\nKey Matrix:\n");
+    printMatrix(key);
+    encrypt(plaintext, key, mod, ciphertext);
+    printf("\nCiphertext: ");
+    for (int i = 0; i < N; i++) {
+        printf("%c ", ciphertext[i] + 'A');
+    } 
+    decrypt(ciphertext, key, mod, decryptedText);
+    printf("\nDecrypted Text: ");
+    for (int i = 0; i < N; i++) {
+        printf("%c ", decryptedText[i] + 'A');
+    }
+
+    return 0;
+}
