@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    double numKeys = 25 * 25 * 24 * 23 * 22 * 21;
+    double logResult = log2(numKeys);
+
+    printf("The Playfair cipher has approximately %.0f possible keys.\n", numKeys);
+    printf("This can be expressed as 2 raised to the power of approximately %.2f.\n", logResult);
+
+    return 0;
+}
